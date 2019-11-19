@@ -1,0 +1,59 @@
+{
+  "name": "@crestron/ch5-utilities-cli",
+  "version": "0.0.6",
+  "description": "CH5 Utilities CLI for archiving and distribution",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crestron/CH5Utilities.git"
+  },
+  "main": "./build/index.js",
+  "bin": {
+    "ch5-cli": "./build/index.js"
+  },
+  "types": "build/@types/index.d.ts",
+  "scripts": {
+    "build": "yarn clean && yarn tsc",
+    "ch5-utils": "./build/index.js",
+    "clean": "rimraf build",
+    "create": "yarn build && yarn test",
+    "publish:local": "yarn build && yarn unlink && yarn link",
+    "publish:local:watch": "nodemon --watch 'src/**/*.ts' --exec 'yarn publish:local'",
+    "setup:local": "yarn install && yarn link @crestron/ch5-utilities && yarn build && yarn link",
+    "start": "ts-node src/index.ts",
+    "start:js": "node build/index.js",
+    "start:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "tsc": "tsc --declaration --declarationDir build/@types"
+  },
+  "keywords": [
+    "ch5",
+    "ch5z",
+    "cli"
+  ],
+  "author": "Crestron",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "dependencies": {
+    "@crestron/ch5-utilities": ">=0.0.4",
+    "@types/commander": "^2.12.2",
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "commander": "^2.20.0",
+    "dotenv": "^8.2.0",
+    "figlet": "^1.2.1",
+    "inquirer": "^6.3.1",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^12.0.2",
+    "figlet-cli": "^0.1.0",
+    "nodemon": "^1.19.0",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  },
+  "files": [
+    "build/**/*",
+    "LICENSE.txt",
+    "readme.md"
+  ]
+}

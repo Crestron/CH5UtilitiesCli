@@ -9,11 +9,11 @@ import commander from "commander";
 import chalk from 'chalk';
 import { Ch5ArchiveCli } from "./Ch5ArchiveCli";
 import { Ch5DeployCli } from "./Ch5DeployCli";
-import { BUILD_VERSION } from "../utils/config";
 
 const clear = require('clear');
 const figlet = require('figlet');
-const buildVersion = BUILD_VERSION;
+const packageJson = require('../../package.json');
+const buildVersion = packageJson.version || 'VERSION_NOT_READ';
 
 export class Ch5Cli {
   private readonly _archiveCli: Ch5ArchiveCli;

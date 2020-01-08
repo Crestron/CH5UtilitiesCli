@@ -32,8 +32,7 @@
   "author": "Crestron",
   "license": "SEE LICENSE IN LICENSE.txt",
   "dependencies": {
-    "@crestron/ch5-utilities": ">=0.0.4",
-    "@types/commander": "^2.12.2",
+    "@crestron/ch5-utilities": "^0.1.21",
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
     "commander": "^2.20.0",

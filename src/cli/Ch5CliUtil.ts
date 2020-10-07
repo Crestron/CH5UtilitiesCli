@@ -32,7 +32,9 @@ export class Ch5CliUtil {
       case 'controlsystem':
         return DeviceType.ControlSystem;
       case 'web':
-        return DeviceType.WebServer;
+        return DeviceType.Web;
+      case 'mobile':
+        return DeviceType.Mobile;
       default:
         throw new Error(`Unknown device type ${deviceTypeInput}`);
     }

@@ -6,6 +6,7 @@
 // under which you licensed this source code.
 
 import * as commander from "commander";
+import path from 'path';
 import { IConfigOptions } from "@crestron/ch5-utilities/build/@types/interfaces";
 import { distributor } from "@crestron/ch5-utilities";
 import { Ch5CliUtil } from "./Ch5CliUtil";
@@ -23,9 +24,9 @@ export class Ch5DeployCli {
     program
       .command('deploy <archive>')
       .option("-H, --deviceHost <deviceHost>", "Device host or IP. Required.")
-      .option("-t, --deviceType <deviceType>", "Device type, value in [touchscreen, controlsystem, web]. Required.", /^(touchscreen|controlsystem|web)$/i)
+      .option("-t, --deviceType <deviceType>", "Device type, value in [touchscreen, controlsystem, web, mobile]. Required.", /^(touchscreen|controlsystem|web|mobile)$/i)
       .option("-d, --deviceDirectory <deviceDirectory>",
-      "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem. Optional.")
+      "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem/web/mobile. Optional.")
       .option("-p, --prompt-for-credentials", "Prompt for credentials. Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
@@ -46,6 +47,7 @@ export class Ch5DeployCli {
     const userAndPassword = await this.getUserAndPassword(options.promptForCredentials);
 
     let configOptions = {
+      projectName: path.parse(archive).name,
       controlSystemHost: options.deviceHost,
       deviceType: deviceType,
       sftpDirectory: options.deviceDirectory,

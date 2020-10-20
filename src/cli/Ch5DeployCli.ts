@@ -25,7 +25,7 @@ export class Ch5DeployCli {
       .option("-H, --deviceHost <deviceHost>", "Device host or IP. Required.")
       .option("-t, --deviceType <deviceType>", "Device type, value in [touchscreen, controlsystem, web]. Required.", /^(touchscreen|controlsystem|web)$/i)
       .option("-d, --deviceDirectory <deviceDirectory>",
-      "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem. Optional.")
+        "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem. Optional.")
       .option("-p, --prompt-for-credentials", "Prompt for credentials. Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
@@ -43,14 +43,14 @@ export class Ch5DeployCli {
 
     let deviceType = this._cliUtil.getDeviceType(options.deviceType);
 
-    const userAndPassword = await this.getUserAndPassword(options.promptForCredentials);
+    const credentials = await this.getUserAndPassword(options.promptForCredentials);
 
     let configOptions = {
       controlSystemHost: options.deviceHost,
       deviceType: deviceType,
       sftpDirectory: options.deviceDirectory,
-      sftpUser: userAndPassword.user,
-      sftpPassword: userAndPassword.password,
+      sftpUser: credentials.user,
+      sftpPassword: credentials.password,
       outputLevel: this._cliUtil.getOutputLevel(options)
     } as IConfigOptions;
     await distributor(archive, configOptions);
@@ -83,10 +83,19 @@ export class Ch5DeployCli {
   }
 
   private async getUserAndPassword(promptForCredentials: boolean): Promise<any> {
+
     if (!promptForCredentials) {
+      const { user, password } = this.getCredentialsFromEnvironmentVariables();
+
+      // environment variables are set and neither has empty value
+      if (user && password) {
+        return { user, password };
+      }
+
+      // use default if environment variable is not set or empty
       return {
-        user: 'crestron',
-        password: ''
+        user: user || 'Crestron',
+        password: password || ''
       }
     }
     return await inquirer.prompt(
@@ -95,16 +104,21 @@ export class Ch5DeployCli {
           type: 'string',
           message: 'Enter SFTP user',
           name: 'user',
-          default: 'crestron',
         },
         {
           type: 'password',
           message: 'Enter SFTP password',
           name: 'password',
-          mask: '*',
-          default: ''
+          mask: '*'
         }
       ]
     );
+  }
+
+  private getCredentialsFromEnvironmentVariables(): { user: string | undefined, password: string | undefined } {
+    return {
+      user: process.env["CH5CLI_DEPLOY_USER"],
+      password: process.env["CH5CLI_DEPLOY_PW"]
+    };
   }
 }

@@ -85,19 +85,10 @@ export class Ch5DeployCli {
   private async getUserAndPassword(promptForCredentials: boolean): Promise<any> {
 
     if (!promptForCredentials) {
-      const { user, password } = this.getCredentialsFromEnvironmentVariables();
-
-      // environment variables are set and neither has empty value
-      if (user && password) {
-        return { user, password };
-      }
-
-      // use default if environment variable is not set or empty
-      return {
-        user: user || 'Crestron',
-        password: password || ''
-      }
+      // if empty, default values from @crestron/ch5-utilities will be used
+      return this.getCredentialsFromEnvironmentVariables();
     }
+    
     return await inquirer.prompt(
       [
         {

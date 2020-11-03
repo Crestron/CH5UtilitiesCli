@@ -53,6 +53,30 @@ For details about how to use the commands, you can write `ch5-cli archive --help
 First you would need to run the archive command to generate the ch5z file, then you need to run the deploy command giving the archive path ( relative or absolute ).
 The deploy command will prompt you for the SFTP user and password,
 
+## Authentication to Control System
+
+There are multiple ways in which the user can provide credentials to the ch5-cli:
+
+- default values
+- environment variables (`CH5CLI_DEPLOY_USER` and `CH5CLI_DEPLOY_PW`)
+- a public/private key pair
+
+The truth table below demonstrates the behavior depending on the parameters that are passed:
+
+
+|`-u` identityUser|`-i` identityFile |`-p` prompt for credentials      | env vars | Authenticate with|
+| ----------- | ----------- |----------- | ----------- |----------- |
+|0|0|0|0|Default values|
+|0|0|0|1|Environment variables|
+|0|0|1|X|User and password from user prompt|
+|0|1|0|0|System username (`$USER` on unix, `%USERNAME%` on windows)|
+|0|1|0|1|User and passphrase from environment variables|
+|0|1|1|X|User and passphrase from user prompt|
+|1|0|X|X|Invalid combination. Will display an error message|
+|1|1|0|0|Provided identityUser and identityFile. If passphrase is required, an error message is shown|
+|1|1|0|1|Passphrase from environment variable, if required|
+|1|1|1|X|Passphrase from user prompt|
+
 #### Examples
 
 ```

@@ -158,7 +158,7 @@ export class Ch5DeployCli {
 
       // 0100; Use system user
       return {
-        user: process.env.USER,
+        user: process.env.USER || process.env.USERNAME,
         privateKey: identityFile,
         passphrase: password
       };

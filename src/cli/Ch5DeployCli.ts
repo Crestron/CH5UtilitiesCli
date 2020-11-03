@@ -26,8 +26,10 @@ export class Ch5DeployCli {
       .option("-H, --deviceHost <deviceHost>", "Device host or IP. Required.")
       .option("-t, --deviceType <deviceType>", "Device type, value in [touchscreen, controlsystem, web, mobile]. Required.", /^(touchscreen|controlsystem|web|mobile)$/i)
       .option("-d, --deviceDirectory <deviceDirectory>",
-      "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem/web/mobile. Optional.")
+        "Device target deploy directory. Defaults to 'display' when deviceType is touchscreen, to 'HTML' when deviceType is controlsystem/web/mobile. Optional.")
       .option("-p, --prompt-for-credentials", "Prompt for credentials. Optional.")
+      .option("-u, --identity-user <identityUser>", "Name of the user connecting to the device. Optional.")
+      .option("-i, --identity-file <identityFile>", "Path to the private key. Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
       .action(async (archive, options) => {
@@ -44,7 +46,7 @@ export class Ch5DeployCli {
 
     let deviceType = this._cliUtil.getDeviceType(options.deviceType);
 
-    const credentials = await this.getUserAndPassword(options.promptForCredentials);
+    const credentials = await this.getCredentials(options.promptForCredentials, options.identityUser, options.identityFile);
 
     let configOptions = {
       projectName: path.parse(archive).name,
@@ -53,6 +55,8 @@ export class Ch5DeployCli {
       sftpDirectory: options.deviceDirectory,
       sftpUser: credentials.user,
       sftpPassword: credentials.password,
+      privateKey: credentials.privateKey,
+      passphrase: credentials.passphrase,
       outputLevel: this._cliUtil.getOutputLevel(options)
     } as IConfigOptions;
     await distributor(archive, configOptions);
@@ -75,6 +79,10 @@ export class Ch5DeployCli {
       missingOptions.push('deviceType');
     }
 
+    if (options.identityUser && !options.identityFile) {
+      missingOptions.push('identityFile');
+    }
+
     if (missingArguments.length == 0 && missingOptions.length == 0) {
       return;
     }
@@ -84,15 +92,82 @@ export class Ch5DeployCli {
     throw new Error(`${argumentsMessage} ${optionsMessage} Type 'ch5-cli deploy --help' for usage information.`)
   }
 
-  private async getUserAndPassword(promptForCredentials: boolean): Promise<any> {
+  private async getCredentials(promptForCredentials: boolean, identityUser: string, identityFile: string): Promise<any> {
+    const { user, password } = this.getCredentialsFromEnvironmentVariables();
 
-    if (!promptForCredentials) {
-      // if empty, default values from @crestron/ch5-utilities will be used
-      return this.getCredentialsFromEnvironmentVariables();
+    // 11XX
+    if (identityUser && identityFile) {
+      // 111X; Use passphrase from user input
+      if (promptForCredentials) {
+        const userInput = await inquirer.prompt([
+          {
+            type: 'password',
+            message: 'Enter passphrase for the private key (empty for no passphrase)',
+            name: 'passphrase',
+            mask: '*'
+          }
+        ]);
+        return {
+          user: identityUser,
+          privateKey: identityFile,
+          passphrase: userInput.passphrase,
+        };
+      }
+
+      // 110X; Use passphrase from env var
+      return {
+        user: identityUser,
+        privateKey: identityFile,
+        passphrase: password
+      };
     }
-    
-    return await inquirer.prompt(
-      [
+
+    // 01XX
+    if (identityFile && !identityUser) {
+      // 011X; Use user and password from user input
+      if (promptForCredentials) {
+        const userInput = await inquirer.prompt([
+          {
+            type: 'string',
+            message: 'Enter user',
+            name: 'user',
+          },
+          {
+            type: 'passphrase',
+            message: 'Enter passphrase for the private key (empty for no passphrase)',
+            name: 'passphrase',
+            mask: '*'
+          }
+        ]);
+
+        return {
+          user: userInput.user,
+          passphrase: userInput.passphrase,
+          privateKey: identityFile
+        };
+      }
+
+      // 0101; Use user and passphrase from env variables
+      if (user !== undefined && password !== undefined) {
+        return {
+          user,
+          passphrase: password,
+          privateKey: identityFile
+        };
+      }
+
+      // 0100; Use system user
+      return {
+        user: process.env.USER,
+        privateKey: identityFile,
+        passphrase: password
+      };
+
+    }
+
+    // 001X; Use user and password from user input
+    if (promptForCredentials) {
+      return await inquirer.prompt([
         {
           type: 'string',
           message: 'Enter SFTP user',
@@ -104,8 +179,11 @@ export class Ch5DeployCli {
           name: 'password',
           mask: '*'
         }
-      ]
-    );
+      ]);
+    }
+
+    // 000X; Use env vars or default values
+    return { user, password };
   }
 
   private getCredentialsFromEnvironmentVariables(): { user: string | undefined, password: string | undefined } {

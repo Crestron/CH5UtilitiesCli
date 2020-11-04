@@ -31,6 +31,7 @@ export class Ch5DeployCli {
       .option("-u, --identity-user <identityUser>", "Name of the user connecting to the device. Optional.")
       .option("-i, --identity-file <identityFile>", "Path to the private key. Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
+      .option("-s, --slow-mode", "Uploads the project with an additional step to resolve sporadic \"Permission denied\" errors on upload. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
       .action(async (archive, options) => {
         try {
@@ -57,8 +58,10 @@ export class Ch5DeployCli {
       sftpPassword: credentials.password,
       privateKey: credentials.privateKey,
       passphrase: credentials.passphrase,
-      outputLevel: this._cliUtil.getOutputLevel(options)
+      outputLevel: this._cliUtil.getOutputLevel(options),
+      slowMode: options.slowMode
     } as IConfigOptions;
+
     await distributor(archive, configOptions);
     process.exit(0); // required, takes too long to exit :|
   }
@@ -81,6 +84,10 @@ export class Ch5DeployCli {
 
     if (options.identityUser && !options.identityFile) {
       missingOptions.push('identityFile');
+    }
+
+    if (options.slowMode && options?.deviceType !== 'touchscreen') {
+      throw new Error('Slow mode only works for touchscreen devices!');
     }
 
     if (missingArguments.length == 0 && missingOptions.length == 0) {

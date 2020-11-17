@@ -32,7 +32,7 @@
   "author": "Crestron",
   "license": "SEE LICENSE IN LICENSE.txt",
   "dependencies": {
-    "@crestron/ch5-utilities": "^0.1.21",
+    "@crestron/ch5-utilities": "^0.1.47",
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
     "commander": "^2.20.0",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/node": "^12.0.2",
     "figlet-cli": "^0.1.0",
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.6",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"

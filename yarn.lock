@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@crestron/ch5-utilities@^0.1.47":
-  version "0.1.47"
-  resolved "https://registry.yarnpkg.com/@crestron/ch5-utilities/-/ch5-utilities-0.1.47.tgz#25e440b6fdcaa65f04ce694d863ec5d10622de89"
-  integrity sha512-iacdGZZy4Bo8CKKPqcPao4OPSx3A2aF29sGIyFbkp8AJLeeA+3+62KqVy79I+pUjJs33fGqlOk9nQdhW2iWbxw==
+"@crestron/ch5-utilities@^0.1.49":
+  version "0.1.49"
+  resolved "https://registry.yarnpkg.com/@crestron/ch5-utilities/-/ch5-utilities-0.1.49.tgz#27aa4ea54898df891ecde1e6a8d4c23a498ec73e"
+  integrity sha512-etWxSesq6XQQaQXP9wx4v4fOw2t+RZuGlEomQs0Uun2dBx6UEAJDWfLra+SjjuTKkSWw3LFjToHjwXhVjUY9yQ==
   dependencies:
     archiver "3.0.0"
     async "^2.6.2"

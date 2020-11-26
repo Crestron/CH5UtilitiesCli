@@ -140,7 +140,7 @@ export class Ch5DeployCli {
             name: 'user',
           },
           {
-            type: 'passphrase',
+            type: 'password',
             message: 'Enter passphrase for the private key (empty for no passphrase)',
             name: 'passphrase',
             mask: '*'

@@ -86,6 +86,7 @@ export class Ch5DeployCli {
       missingOptions.push('identityFile');
     }
 
+    /* coverity[check_after_deref] */
     if (options.slowMode && options?.deviceType !== 'touchscreen') {
       throw new Error('Slow mode only works for touchscreen devices!');
     }

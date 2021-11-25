@@ -17,7 +17,7 @@ export class Ch5ArchiveCli {
     this._cliUtil = new Ch5CliUtil();
   }
 
-  public setupArchiveCommand(program: commander.Command): void {
+  public setupArchiveCommand(program: commander.Command, projectName: string): void {
     program
       .command('archive')
       .option("-p, --project-name <projectName>", "Project name. Required.")
@@ -32,7 +32,7 @@ export class Ch5ArchiveCli {
       .option("-c, --contract-file <contractFile>", "Relative or absolute file path for contract editor config.File name must have .cse2j extension. Optional.")
       .action(async (options) => {
         try {
-          await this.archive(options);
+          await this.archive({...options, projectName: options.projectName || projectName});
         } catch (e) {
           this._cliUtil.writeError(e);
         }

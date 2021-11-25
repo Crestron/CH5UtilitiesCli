@@ -13,7 +13,14 @@ import { Ch5DeployCli } from "./Ch5DeployCli";
 const clear = require('clear');
 const figlet = require('figlet');
 const packageJson = require('../../package.json');
+
 const buildVersion = packageJson.version || 'VERSION_NOT_READ';
+
+let shellProjectPackageJson: any = {};
+
+try {
+  shellProjectPackageJson = require('../../../../../package.json');
+} catch (err) {}
 
 export class Ch5Cli {
   private readonly _archiveCli: Ch5ArchiveCli;
@@ -30,8 +37,8 @@ export class Ch5Cli {
       .version(buildVersion)
       .description("CH5 utilities CLI");
 
-    this._archiveCli.setupArchiveCommand(program);
-    this._deployCli.setupDeployCommand(program);
+    this._archiveCli.setupArchiveCommand(program, shellProjectPackageJson.name);
+    this._deployCli.setupDeployCommand(program, shellProjectPackageJson.name);
 
     // error on unknown commands
     program.on('command:*', function () {

@@ -20,7 +20,7 @@ export class Ch5DeployCli {
     this._cliUtil = new Ch5CliUtil();
   }
 
-  public setupDeployCommand(program: commander.Command): void {
+  public setupDeployCommand(program: commander.Command, projectName: string): void {
     program
       .command('deploy <archive>')
       .option("-H, --deviceHost <deviceHost>", "Device host or IP. Required.")
@@ -35,7 +35,7 @@ export class Ch5DeployCli {
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
       .action(async (archive, options) => {
         try {
-          await this.deploy(archive, options);
+          await this.deploy(archive, {...options, projectName: options.projectName || projectName});
         } catch (e) {
           this._cliUtil.writeError(e);
         }

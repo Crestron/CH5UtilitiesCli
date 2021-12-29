@@ -11,7 +11,6 @@ import { Ch5ArchiveCli } from "./Ch5ArchiveCli";
 import { Ch5DeployCli } from "./Ch5DeployCli";
 
 const clear = require('clear');
-const figlet = require('figlet');
 const packageJson = require('../../package.json');
 
 const buildVersion = packageJson.version || 'VERSION_NOT_READ';
@@ -50,16 +49,6 @@ export class Ch5Cli {
 
     if (!process.argv.slice(2).length) {
       clear();
-      console.log(
-        chalk.blue(
-          figlet.textSync(`Crestron CH5 Utilities © ${new Date().getFullYear()}`,
-            {
-              font: 'Standard',
-              horizontalLayout: 'full',
-              verticalLayout: 'full'
-            })
-        )
-      );
       program.outputHelp();
     }
   }

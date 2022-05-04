@@ -8,6 +8,8 @@
 import chalk from "chalk";
 import { DeviceType, OutputLevel } from "@crestron/ch5-utilities";
 
+const fs = require("fs");
+
 export class Ch5CliUtil {
   public writeError(error: Error): void {
     console.log(chalk.red(`${error.name}: ${error.message}`));
@@ -23,6 +25,20 @@ export class Ch5CliUtil {
     }
 
     return OutputLevel.Normal;
+  }
+
+  public readFileContentSync(path: string) {
+    return fs.readFileSync(path, 'utf8');
+  }
+
+  public getShellProjectPackageJson() {
+    let shellProjectPackageJson: any = {};
+    try {
+      shellProjectPackageJson = JSON.parse(this.readFileContentSync('./package.json'));
+    } catch (err) {
+
+    }
+    return shellProjectPackageJson;
   }
 
   public getDeviceType(deviceTypeInput: string): DeviceType {

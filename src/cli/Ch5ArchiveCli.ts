@@ -17,23 +17,23 @@ export class Ch5ArchiveCli {
     this._cliUtil = new Ch5CliUtil();
   }
 
-  public setupArchiveCommand(program: commander.Command, projectName: string): void {
+  public setupArchiveCommand(program: commander.Command): void {
     program
       .command('archive')
       .option("-p, --project-name <projectName>", "Project name. Required.")
       .option("-d, --directory-name <directoryName>", "Source directory for archiving. Required.")
       .option("-o, --output-directory <outputDirectory>", "Target output directory. Required.")
       .option("-A, --app-ui-manifest-params <appUiManifestParams>",
-      "Additional app UI manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
+        "Additional app UI manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
       .option("-P, --project-manifest-params <projectManifestParams>",
-      "Additional project manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
+        "Additional project manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
       .option("-c, --contract-file <contractFile>", "Relative or absolute file path for contract editor config.File name must have .cse2j extension. Optional.")
       .action(async (options) => {
         try {
-          await this.archive({...options, projectName: options.projectName || projectName});
-        } catch (e) {
+          await this.archive({ ...options, projectName: options.projectName || this._cliUtil.getShellProjectPackageJson().name });
+        } catch (e: any) {
           this._cliUtil.writeError(e);
         }
       });

@@ -16,16 +16,14 @@
 
 The purpose of the library is to expose the [ch5-utilities](https://www.npmjs.com/package/@crestron/ch5-utilities) archive and distribute functionality as two commands: `archive` and `deploy`.
 
-
 ## Usage
 
 The cli contains two commands: archive and deploy. After following the steps from above, just write `ch5-cli` in the terminal, and hit enter - it will display the default message for options and commands.
 For details about how to use the commands, you can write `ch5-cli archive --help` or `ch5-cli deploy --help` - this will display the options and what they mean.
 
-
 First you would need to run the archive command to generate the ch5z file, then you need to run the deploy command giving the archive path ( relative or absolute ).
 
-#### Examples
+### Examples
 
 ```
 > ch5-cli archive -p ch5-template-sample -d dist/NgCh5DemoHorizontal -o dist

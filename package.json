@@ -16,7 +16,7 @@
     "ch5-utils": "./build/index.js",
     "clean": "rimraf build",
     "create": "npm run build && npm run test",
-    "my:pack": "npm run clean && npm run build && npm pack && npm install -g 'crestron-ch5-utilities-cli-0.0.6.tgz'",
+    "install:global": "npm install -g 'crestron-ch5-utilities-cli-0.0.6.tgz'",
     "publish:local": "npm run build && npm unlink && npm link",
     "publish:local:watch": "nodemon --watch 'src/**/*.ts' --exec 'npm run publish:local'",
     "setup:local": "npm run install && npm link @crestron/ch5-utilities && npm run build && npm link",

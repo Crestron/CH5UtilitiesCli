@@ -27,6 +27,9 @@ First you would need to run the archive command to generate the ch5z file, then 
 
 ```
 > ch5-cli archive -p ch5-template-sample -d dist/NgCh5DemoHorizontal -o dist
+>
+> ch5-cli archive -p my-project-v1.0.0 -d ./ -o /Users/${USERNAME}/git/CH5UtilitiesCli -s shell-template.ch5z
+>
 > ch5-cli deploy -H tshostname -t touchscreen dist/ch5-template-sample.ch5z
 ```
 

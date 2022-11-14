@@ -81,7 +81,7 @@ The truth table below demonstrates the behavior depending on the parameters that
 ```
 > ch5-cli archive --project-name angular-demo-app --directory-name dist/NgIseCh5Demo --output-directory output-test
 >
-> ch5-cli archive -p my-project-v1.0.0 -d ./ -o /Users/mruanova-hurtado/git/CH5UtilitiesCli -s shell-template.ch5z
+> ch5-cli archive -p my-project-v1.0.0 -d ./ -o /Users/${USERNAME}o/git/CH5UtilitiesCli -s shell-template.ch5z
 >
 > ch5-cli deploy output-test/angular-demo-app.ch5z --deviceHost 192.168.2.44 --deviceDirectory display --deviceType touchscreen
 ```

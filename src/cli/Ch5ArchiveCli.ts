@@ -19,17 +19,18 @@ export class Ch5ArchiveCli {
 
   public setupArchiveCommand(program: commander.Command): void {
     program
-      .command('archive')
+      .command("archive")
       .option("-p, --project-name <projectName>", "Project name. Required.")
       .option("-d, --directory-name <directoryName>", "Source directory for archiving. Required.")
       .option("-o, --output-directory <outputDirectory>", "Target output directory. Required.")
       .option("-A, --app-ui-manifest-params <appUiManifestParams>",
-        "Additional app UI manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
+      "Additional app UI manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
       .option("-P, --project-manifest-params <projectManifestParams>",
-        "Additional project manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
+      "Additional project manifest parameters. Send as a comma separated list of key-value pairs ( key1=value1,key2=value2 ). Optional.")
       .option("-q, --quiet [quiet]", "Don\'t display messages. Optional.")
       .option("-vvv, --verbose [verbose]", "Verbose output. Optional.")
       .option("-c, --contract-file <contractFile>", "Relative or absolute file path for contract editor config.File name must have .cse2j extension. Optional.")
+      .option("-s, --source-archive <projectName>", "used for renaming an existing archive. Optional.")
       .action(async (options) => {
         try {
           await this.archive({ ...options, projectName: options.projectName || this._cliUtil.getShellProjectPackageJson().name });
@@ -39,7 +40,7 @@ export class Ch5ArchiveCli {
       });
   }
 
-  private async archive(options: any): Promise<void> {
+  private async archive(options: IConfigOptions): Promise<void> {
     this.validateArchiveOptions(options);
 
     let configOptions = {
@@ -49,24 +50,25 @@ export class Ch5ArchiveCli {
       outputLevel: this._cliUtil.getOutputLevel(options),
       additionalAppuiManifestParameters: this.extractKeyValuePairs(options.appUiManifestParams),
       additionalProjectManifestParameters: this.extractKeyValuePairs(options.projectManifestParams),
-      contractFile: options.contractFile
+      contractFile: options.contractFile,
+      sourceArchive: options.sourceArchive,
     } as IConfigOptions;
     await archiver(configOptions);
   }
 
-  private validateArchiveOptions(options: any): void {
+  private validateArchiveOptions(options: IConfigOptions): void {
     let missingOptions = [];
 
     if (!options.projectName) {
-      missingOptions.push('projectName');
+      missingOptions.push("projectName");
     }
 
     if (!options.directoryName) {
-      missingOptions.push('directoryName');
+      missingOptions.push("directoryName");
     }
 
     if (!options.outputDirectory) {
-      missingOptions.push('outputDirectory');
+      missingOptions.push("outputDirectory");
     }
 
     if (missingOptions.length == 0) {
@@ -81,7 +83,7 @@ export class Ch5ArchiveCli {
       return {};
     }
 
-    let params = {} as any;
+    let params = {} as IAdditionalParameters;
     commaSeparatedList.split(',').forEach(value => {
       const keyValuePair = value.split('=');
       params[keyValuePair[0]] = keyValuePair[1];

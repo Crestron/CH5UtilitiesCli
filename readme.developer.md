@@ -12,35 +12,35 @@
 
 ## Background
 
-The purpose of the library is to expose the [ch5-utilities](./../ch5-utilities/readme.md) archive and distribute functionality as two commands: `archive` and `deploy`.
+The purpose of the library is to expose the [ch5-utilities](./../CH5Utilities/readme.md) archive and distribute functionality as two commands: `archive` and `deploy`.
 
 ## Setup
 
-Before going through these steps, make sure you have completed the setup section in [ch5-utilities](./../ch5-utilities/readme.md), since it is a dependency.
+Before going through these steps, make sure you have completed the setup section in [ch5-utilities](./../CH5Utilities/readme.md), since it is a dependency.
 
 Install the required packages.
 ```
-yarn install
+npm install
 ```
 
 Add the ch5-utilities library.
 ```
-yarn link ch5-utilities
+npm link @crestron/ch5-utilities
 ```
 
 Build the library.
 ```
-yarn build
+npm run build
 ```
 
 Publish the ch5-utilities-cli library for local usage.
 ```
-yarn link
+npm run link
 ```
 
 ## Commands
 
-#### yarn publish:local
+### npm run publish:local
 
 After the initial setup, you can use this command to rebuild and publish changes in the library.
 
@@ -48,7 +48,6 @@ After the initial setup, you can use this command to rebuild and publish changes
 
 The cli contains two commands: archive and deploy. After following the steps from above, just write `ch5-cli` in the terminal, and hit enter - it will display the default message for options and commands.
 For details about how to use the commands, you can write `ch5-cli archive --help` or `ch5-cli deploy --help` - this will display the options and what they mean.
-
 
 First you would need to run the archive command to generate the ch5z file, then you need to run the deploy command giving the archive path ( relative or absolute ).
 The deploy command will prompt you for the SFTP user and password,
@@ -77,11 +76,12 @@ The truth table below demonstrates the behavior depending on the parameters that
 |1|1|0|1|Passphrase from environment variable, if required|
 |1|1|1|X|Passphrase from user prompt|
 
-#### Examples
+### Examples
 
 ```
 > ch5-cli archive --project-name angular-demo-app --directory-name dist/NgIseCh5Demo --output-directory output-test
 >
+> ch5-cli archive -p my-project-v1.0.0 -d ./ -o /Users/${USERNAME}o/git/CH5UtilitiesCli -s shell-template.ch5z
 >
 > ch5-cli deploy output-test/angular-demo-app.ch5z --deviceHost 192.168.2.44 --deviceDirectory display --deviceType touchscreen
 ```
